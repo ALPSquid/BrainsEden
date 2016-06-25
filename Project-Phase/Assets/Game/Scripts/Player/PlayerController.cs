@@ -26,8 +26,8 @@ public class PlayerController : MonoBehaviour {
     public float powerRange = 3.5f;
     [Tooltip("Delay between when the player can use their powers")]
     public float powerDelay = 0.75f;
-    public float pushPower = 10f;
-    public float pullPower = 10f;
+    public float pushPower = 20f;
+    public float pullPower = 25f;
 
     [Header("Controls")]
     public MouseLook mouseLook = new MouseLook();
