@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour {
 	
 	public EWorldPhase currentPhase = EWorldPhase.COLOUR;
 
+    void OnEnable() {
+        Cursor.visible = false;
+    }
 
     public void switchPhase() {
         currentPhase = (currentPhase == EWorldPhase.COLOUR) ? EWorldPhase.ALPHA : EWorldPhase.COLOUR;
