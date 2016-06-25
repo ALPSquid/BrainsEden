@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SoundManager : MonoBehaviour {
 
-	public float volume = 1.0f;
+	public float volume = 0.1f;
 
 	AudioSource audioSource;
 	public AudioClip[] audioClips;
