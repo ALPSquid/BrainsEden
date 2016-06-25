@@ -1,16 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class UI : MonoBehaviour {
 	
 	public void ChangeScene(string scene){
-		SceneManager.LoadScene(scene);
+        Application.LoadLevel(scene);
+ 
 	}
 	
 	public void ExitGame(){
-		Application.Exit();
+        Application.Quit();
 	}
 	
 }

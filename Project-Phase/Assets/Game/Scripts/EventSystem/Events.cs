@@ -4,11 +4,19 @@ using System.Collections;
 public static class Events {
 
 	public struct EventChecpointActivated {
-		public gameobject checkpointObject;
+		public GameObject checkpointObject;
+
+        public EventChecpointActivated(GameObject checkpointObject) {
+            this.checkpointObject = checkpointObject;
+        }
 	}
 	
 	public struct EventPhaseSwitched {
 		public GameManager.EWorldPhase currentPhase;
+
+        public EventPhaseSwitched(GameManager.EWorldPhase currentPhase) {
+            this.currentPhase = currentPhase;
+        }
 	}
 
 	public delegate void OnPhaseSwitched(EventPhaseSwitched eventPhaseSwitched);

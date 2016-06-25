@@ -8,5 +8,11 @@ public class GameManager{
 		ALPHA
 	}
 	
-	public EWorldPhase world = EWorldPhase.COLOUR;
+	public EWorldPhase currentPhase = EWorldPhase.COLOUR;
+
+
+    public void switchPhase() {
+        currentPhase = (currentPhase == EWorldPhase.COLOUR) ? EWorldPhase.ALPHA : EWorldPhase.COLOUR;
+        Events.onPhaseSwitchedEvent(new Events.EventPhaseSwitched(currentPhase));
+    }
 }

@@ -15,11 +15,11 @@ public class PhasedObject : WorldSwitchingComponent {
 	public override void PhaseSwitched(Events.EventPhaseSwitched eventPhaseSwitched){
 		
 		switch (eventPhaseSwitched.currentPhase){
-			case GameManager.EWorldPhase.COLOUR;
-				renderer.material = colourMaterials;
+			case GameManager.EWorldPhase.COLOUR:
+				renderer.materials = colourMaterials;
 				break;
-			case GameManager.EWorldPhase.ALPHA;
-				renderer.material = alphaMaterials;
+			case GameManager.EWorldPhase.ALPHA:
+				renderer.materials = alphaMaterials;
 				break;
 		}
 	}

@@ -16,8 +16,8 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void SwitchWorld(){
-		Events.onWorldSwitchEvent();
+		//Events.onPhaseSwitchedEvent();
 		world = !world;
-		GameManager.world = world;
+		//GameManager.world = world;
 	}
 }

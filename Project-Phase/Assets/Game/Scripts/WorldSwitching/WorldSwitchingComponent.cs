@@ -11,5 +11,5 @@ public abstract class WorldSwitchingComponent : MonoBehaviour {
 		Events.onPhaseSwitchedEvent -= PhaseSwitched;
 	}
 
-	public abstract void PhaseSwitched (Events.EventPhaseSwitched);
+	public abstract void PhaseSwitched (Events.EventPhaseSwitched eventPhasedSwitched);
 }

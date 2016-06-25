@@ -8,14 +8,11 @@ public class CheckpointComponent : MonoBehaviour {
 	
 	//When checkpoint activated call the event
 	void Activated(){
-		Events.EventChecpointActivated eventCheckpointActivated = new Events.EventChecpointActivated();
-		eventCheckpointActivated.checkpointObject = this.gameobject;
-		
-		Events.OnCheckpointActivatedEvent(eventCheckpointActivated);
+        Events.OnCheckpointActivatedEvent(new Events.EventChecpointActivated(this.gameObject));
 	}
 	
 	void OnCollisionEnter(Collision collision) {
-        if (collision.gameobject.tag == "Player"){
+        if (collision.gameObject.tag == "Player"){
 			Activated();
 		}
     }
