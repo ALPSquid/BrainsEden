@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class GameManager : MonoBehaviour {
@@ -14,19 +14,25 @@ public class GameManager : MonoBehaviour {
 
     void OnEnable() {
         Cursor.visible = false;
-		Events.OnGameEndEvent += ReloadLevel;
+		Events.onGameEndEvent += ReloadLevel;
+		Events.onPlayerDeathEvent += PlayerDied;
     }
 
 	void OnDisable() {
-        Events.OnGameEndEvent -= ReloadLevel;
+		Events.onGameEndEvent -= ReloadLevel;
+		Events.onPlayerDeathEvent -= PlayerDied;
     }
 	
-    public void switchPhase() {
+    void SwitchPhase() {
         currentPhase = (currentPhase == EWorldPhase.COLOUR) ? EWorldPhase.ALPHA : EWorldPhase.COLOUR;
         Events.onPhaseSwitchedEvent(new Events.EventPhaseSwitched(currentPhase));
     }
+
+	void PlayerDied(){
+		Events.onGameEndEvent();
+	}
 	
-	public void ReloadLevel(){
+	void ReloadLevel(){
 		Application.LoadLevel(level);
 	}
 

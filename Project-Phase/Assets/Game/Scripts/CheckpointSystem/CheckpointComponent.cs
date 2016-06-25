@@ -4,11 +4,13 @@ using System.Collections;
 public class CheckpointComponent : MonoBehaviour {
 
 	public int OrderID;
-	
-	
+
 	//When checkpoint activated call the event
-	void Activated(){
-        Events.OnCheckpointActivatedEvent(new Events.EventChecpointActivated(this.gameObject));
+	private void Activated(){
+		if (Events.onCheckpointActivatedEvent != null){
+        	Events.onCheckpointActivatedEvent(new Events.EventCheckpointActivated(this.gameObject));
+			Debug.Log("Checkpoint Triggered");
+		}
 	}
 	
 	void OnCollisionEnter(Collision collision) {

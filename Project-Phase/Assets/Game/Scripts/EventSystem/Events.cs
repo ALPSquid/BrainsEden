@@ -3,10 +3,10 @@ using System.Collections;
 
 public static class Events {
 
-	public struct EventChecpointActivated {
+	public struct EventCheckpointActivated {
 		public GameObject checkpointObject;
 
-        public EventChecpointActivated(GameObject checkpointObject) {
+		public EventCheckpointActivated(GameObject checkpointObject) {
             this.checkpointObject = checkpointObject;
         }
 	}
@@ -21,16 +21,13 @@ public static class Events {
 
 	public delegate void OnPhaseSwitched(EventPhaseSwitched eventPhaseSwitched);
 	public static OnPhaseSwitched onPhaseSwitchedEvent;
-
-	public delegate void OnStartPlay();
-	public static OnStartPlay onStartPlayEvent;
 	
 	public delegate void OnPlayerDeath();
 	public static OnPlayerDeath onPlayerDeathEvent;
 	
 	public delegate void OnGameEnd();
-	public static OnGameEnd OnGameEndEvent;
+	public static OnGameEnd onGameEndEvent;
 
-	public delegate void OnCheckpointActivated(EventChecpointActivated eventChecpointActivated);
-	public static OnCheckpointActivated OnCheckpointActivatedEvent;
+	public delegate void OnCheckpointActivated(EventCheckpointActivated eventChecpointActivated);
+	public static OnCheckpointActivated onCheckpointActivatedEvent;
 }
