@@ -2,11 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class PuzzleVolume : MonoBehaviour {
+public abstract class PuzzleVolume : MonoBehaviour {
 
     // List of puzzle elements inside this puzzle volume
     protected List<PuzzleElement> puzzleElements = new List<PuzzleElement>();
+    // Whether all puzzle elements have been complete
+    protected bool isComplete = false;
 
+
+    void Update() {
+        for (int i = 0; i < puzzleElements.Count; i++ ) {
+            if (!puzzleElements[i].isComplete) {
+                isComplete = false;
+                break;
+            }
+        }
+    }
 
     void OnTriggerEnter(Collider other) {
         AddRemovePuzzleElement(other.gameObject);
