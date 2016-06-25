@@ -3,8 +3,8 @@ using System.Collections;
 
 public class TabletPickUp : InteractableLookAtComponent {
 
-	public override void OnInteract(){
-		Events.onTabletPickedUpEvent();
+	public override void OnInteract() {
+        if (Events.onTabletPickedUpEvent != null) Events.onTabletPickedUpEvent();
 		Destroy(this.gameObject);
 	}
 }

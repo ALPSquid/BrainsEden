@@ -8,15 +8,24 @@ public abstract class PuzzleVolume : MonoBehaviour {
     protected List<PuzzleElement> puzzleElements = new List<PuzzleElement>();
     // Whether all puzzle elements have been complete
     protected bool isComplete = false;
+    private bool lastIsComplete = false;
 
 
     void Update() {
+        isComplete = true;
         for (int i = 0; i < puzzleElements.Count; i++ ) {
             if (!puzzleElements[i].isComplete) {
                 isComplete = false;
                 break;
             }
         }
+        // If the puzzle has just been completed, trigger callback
+        if (isComplete && !lastIsComplete) {
+            OnPuzzleComplete();
+        } else if (lastIsComplete && !isComplete) {
+            OnPuzzleNotComplete();
+        }
+        lastIsComplete = isComplete;
     }
 
     void OnTriggerEnter(Collider other) {
@@ -26,6 +35,16 @@ public abstract class PuzzleVolume : MonoBehaviour {
     void OnTriggerExit(Collider other) {
         AddRemovePuzzleElement(other.gameObject);
     }
+
+    /// <summary>
+    /// Called as soon as all puzzle elements become complete
+    /// </summary>
+    protected abstract void OnPuzzleComplete();
+    /// <summary>
+    /// Called as soon as one puzzle element becomes not complete 
+    /// after the puzzle has already been completed
+    /// </summary>
+    protected abstract void OnPuzzleNotComplete();
 
     /// <summary>
     /// Checks if the provided game object has a PuzzleElement component, 

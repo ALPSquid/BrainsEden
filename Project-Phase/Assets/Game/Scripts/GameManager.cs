@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour {
         public static string PLAYER = "Player";
         public static string PLAYER_ARM = "PlayerArm";
 		public static string CHECKPOINT = "Checkpoint";
-		public static string HUD_INFOTEXT = "HudInfoText";
+        public static string PLAYER_HUD = "PlayerHUD";
+        public static string HUD_INFOTEXT = "HUDInfoText";
     }
 
 	public enum EWorldPhase {

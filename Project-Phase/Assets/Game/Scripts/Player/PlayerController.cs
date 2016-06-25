@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityStandardAssets.Characters.FirstPerson;
@@ -8,6 +9,7 @@ using UnityStandardAssets.Characters.FirstPerson;
 [RequireComponent(typeof(CapsuleCollider))]
 public class PlayerController : MonoBehaviour {
 
+    /// <summary>Player powers, used by UsePower()</summary>
     public enum EPower {
         PUSH, PULL
     }
@@ -28,6 +30,10 @@ public class PlayerController : MonoBehaviour {
     public float powerDelay = 0.75f;
     public float pushPower = 100f;
     public float pullPower = 120f;
+
+    [Header("Interaction")]
+    [Tooltip("How far away the player can interact with lookAt objects")]
+    public float interactRange = 1.5f;
 
     [Header("Controls")]
     public MouseLook mouseLook = new MouseLook();
@@ -62,6 +68,7 @@ public class PlayerController : MonoBehaviour {
     private Vector3 surfaceRightVector;
 
     private Animator animPlayerArm;
+    private HUD playerHUD;
     private GameManager gameManager;
 
     // Cache of input values
@@ -71,7 +78,8 @@ public class PlayerController : MonoBehaviour {
         {InputMappings.EAction.JUMP, 0},
         {InputMappings.EAction.PUSH, 0},
         {InputMappings.EAction.PULL, 0},
-        {InputMappings.EAction.SWITCH_PHASE, 0}
+        {InputMappings.EAction.SWITCH_PHASE, 0},
+        {InputMappings.EAction.INTERACT, 0}
     };
     // Input Values last frame
     private Dictionary<InputMappings.EAction, float> LastInputValues;
@@ -80,7 +88,7 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody body;
 
 
-    void Start() {
+    void OnEnable() {
         gameManager = GameObject.FindGameObjectWithTag(GameManager.Tags.GAME_MANAGER).GetComponent<GameManager>();
         if (gameManager == null) {
             throw new UnityException("Scene needs a GameManager instance with tag: " + GameManager.Tags.GAME_MANAGER);
@@ -88,6 +96,7 @@ public class PlayerController : MonoBehaviour {
         body = GetComponent<Rigidbody>();
         bodyCollider = GetComponent<CapsuleCollider>();
         animPlayerArm = GameObject.FindGameObjectWithTag(GameManager.Tags.PLAYER_ARM).GetComponent<Animator>();
+        playerHUD = GameObject.FindGameObjectWithTag(GameManager.Tags.PLAYER_HUD).GetComponent<HUD>();
 
         // Defaults
         surfaceForwardVector = body.transform.forward;
@@ -95,13 +104,32 @@ public class PlayerController : MonoBehaviour {
         LastInputValues = InputValues;
     }
 
-    void OnEnable() {
-        mouseLook.Init(transform, Camera.main.transform);        
+    void Start() {
+        mouseLook.Init(transform, Camera.main.transform);
     }
 
 	void Update () {
         mouseLook.LookRotation(transform, Camera.main.transform);
         HandleInput();
+        
+        // Interactable object polling
+        playerHUD.displayText("");
+        RaycastHit cameraHit;
+        Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out cameraHit, interactRange);
+        if (cameraHit.distance != 0) {
+            LookAtComponent lookAtTarget = cameraHit.collider.GetComponentInParent<LookAtComponent>();
+            if (lookAtTarget) {
+                // If target is an instance of LookAtComponent, display info on the HUD
+                playerHUD.displayText(lookAtTarget.infoText);
+                // If Interact is pressed and the target is an InteractableLookAtComponent, interact with it
+                if (InputValues[InputMappings.EAction.INTERACT] == 1) {
+                    try {
+                        InteractableLookAtComponent interactable = (InteractableLookAtComponent)lookAtTarget;
+                        interactable.OnInteract();    
+                    } catch (InvalidCastException) { /* Not an interactable */ }                    
+                }
+            }
+        }
 
         // Update forward and lateral speed
         _speed = surfaceForwardVector.x * body.velocity.x +
@@ -129,7 +157,7 @@ public class PlayerController : MonoBehaviour {
         }
         //Debug.DrawLine(body.transform.position, body.transform.position + surfaceForwardVector * 2);
         //Debug.DrawLine(body.transform.position, body.transform.position + surfaceRightVector * 2);
-        Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward * powerRange);
+        //Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward * powerRange);
 
         // Jump delay counter
         if (isJumping) {
@@ -233,6 +261,7 @@ public class PlayerController : MonoBehaviour {
         InputValues[InputMappings.EAction.SWITCH_PHASE] = InputMappings.GetInput(InputMappings.EAction.SWITCH_PHASE);
         InputValues[InputMappings.EAction.PUSH] = InputMappings.GetInput(InputMappings.EAction.PUSH);
         InputValues[InputMappings.EAction.PULL] = InputMappings.GetInput(InputMappings.EAction.PULL);
+        InputValues[InputMappings.EAction.INTERACT] = InputMappings.GetInput(InputMappings.EAction.INTERACT);
 
         if (InputValues[InputMappings.EAction.JUMP] == 1) {
             Jump();

@@ -4,7 +4,7 @@ using System.Collections;
 
 public class HUD : MonoBehaviour {
 
-	Text txtInfo;
+	private Text txtInfo;
 
 	void Start(){
 		txtInfo = GameObject.FindWithTag(GameManager.Tags.HUD_INFOTEXT).GetComponent<Text>();

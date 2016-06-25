@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public static class InputMappings {
 
     public enum EAction {
-        MOVE_FORWARD, MOVE_RIGHT, JUMP, PUSH, PULL, SWITCH_PHASE
+        MOVE_FORWARD, MOVE_RIGHT, JUMP, PUSH, PULL, SWITCH_PHASE, INTERACT
     }
 
     private static Dictionary<EAction, string> InputNames = new Dictionary<EAction,string> {
@@ -17,7 +17,8 @@ public static class InputMappings {
         {EAction.JUMP, "Jump"},
         {EAction.PUSH, "Push"},
         {EAction.PULL, "Pull"},
-        {EAction.SWITCH_PHASE, "Switch Phase"}
+        {EAction.SWITCH_PHASE, "Switch Phase"},
+        {EAction.INTERACT, "Interact"}
     };
 
     private static List<EAction> Axes = new List<EAction> {

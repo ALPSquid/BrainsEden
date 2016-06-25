@@ -8,7 +8,7 @@ public abstract class InteractableLookAtComponent : LookAtComponent {
 	public string name;
 
 	void Start(){
-		infoText = action + name;
+		infoText = "E to " + action + " " + name;
 	}
 	
 	public abstract void OnInteract();
