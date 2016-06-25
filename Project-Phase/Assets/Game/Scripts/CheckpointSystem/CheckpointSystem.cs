@@ -18,8 +18,8 @@ public class CheckpointSystem : MonoBehaviour {
 		GameObject checkpointObject = eventChecpointActivated.checkpointObject;
 		CheckpointComponent checkpointComponent = checkpointObject.GetComponent<CheckpointComponent>();
 		
-		if (){
-			
+		if (checkpointComponent.OrderID > currentCheckpoint){
+			currentCheckpoint = checkpointComponent.OrderID;
 		}
 	}
 }
