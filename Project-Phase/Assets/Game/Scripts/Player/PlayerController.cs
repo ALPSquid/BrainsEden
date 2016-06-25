@@ -8,14 +8,26 @@ using UnityStandardAssets.Characters.FirstPerson;
 [RequireComponent(typeof(CapsuleCollider))]
 public class PlayerController : MonoBehaviour {
 
+    public enum EPower {
+        PUSH, PULL
+    }
+
     [Header("Movement")]
     [Tooltip("How fast the player accelerates")]
     public float movementSpeed = 40f;
     public float maxSpeed = 6f;
     [Tooltip("Jump froce, ignoring mass")]
     public float jumpForce = 1f;
-    [Tooltip("minimum time between player jumping")]
+    [Tooltip("Delay between when the player can jump")]
     public float jumpDelay = 0.3f;
+
+    [Header("Powers")]
+    [Tooltip("Range of the player's power in units")]
+    public float powerRange = 3.5f;
+    [Tooltip("Delay between when the player can use their powers")]
+    public float powerDelay = 1f;
+    public float pushPower = 10f;
+    public float pullPower = 10f;
 
     [Header("Controls")]
     public MouseLook mouseLook = new MouseLook();
@@ -37,6 +49,10 @@ public class PlayerController : MonoBehaviour {
     private bool isJumping = false;
     // Counter for jump delay
     private float jumpCounter = 0;
+    // Whether powers are currently on cooldown and can't be used
+    private bool powersOnCooldown = false;
+    // Counter for power delay
+    private float powerCounter = 0;
     // Whether the player is currently on the ground
     private bool onGround = false;
 
@@ -45,7 +61,9 @@ public class PlayerController : MonoBehaviour {
     private Vector3 surfaceForwardVector;
     private Vector3 surfaceRightVector;
 
+    private Animation animPlayerArm;
     private GameManager gameManager;
+
     // Cache of input values
     private Dictionary<InputMappings.EAction, float> InputValues = new Dictionary<InputMappings.EAction, float>() {
         {InputMappings.EAction.MOVE_FORWARD, 0},
@@ -63,30 +81,35 @@ public class PlayerController : MonoBehaviour {
 
 
     void Start() {
-        mouseLook.Init(transform, Camera.main.transform);
-    }
-
-    void OnEnable() {
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        gameManager = GameObject.FindGameObjectWithTag(GameManager.Tags.GAME_MANAGER).GetComponent<GameManager>();
         if (gameManager == null) {
             throw new UnityException("Scene needs a GameManager instance with tag 'GameManager'");
         }
         body = GetComponent<Rigidbody>();
         bodyCollider = GetComponent<CapsuleCollider>();
+        animPlayerArm = GameObject.FindGameObjectWithTag(GameManager.Tags.PLAYER_ARM).GetComponent<Animation>();
 
+        // Defaults
+        surfaceForwardVector = body.transform.forward;
+        surfaceRightVector = body.transform.right;
         LastInputValues = InputValues;
+    }
+
+    void OnEnable() {
+        mouseLook.Init(transform, Camera.main.transform);        
     }
 
 	void Update () {
         mouseLook.LookRotation(transform, Camera.main.transform);
         HandleInput();
 
-        _speed = body.transform.forward.x * body.velocity.x +
-                 body.transform.forward.y * body.velocity.y +
-                 body.transform.forward.z * body.velocity.z;
-        _speedLateral = body.transform.right.x * body.velocity.x +
-                        body.transform.right.y * body.velocity.y +
-                        body.transform.right.z * body.velocity.z;
+        // Update forward and lateral speed
+        _speed = surfaceForwardVector.x * body.velocity.x +
+                 surfaceForwardVector.y * body.velocity.y +
+                 surfaceForwardVector.z * body.velocity.z;
+        _speedLateral = surfaceRightVector.x * body.velocity.x +
+                        surfaceRightVector.y * body.velocity.y +
+                        surfaceRightVector.z * body.velocity.z;
 
         // Ground hit detection and surface vectors
         RaycastHit hit;
@@ -106,7 +129,7 @@ public class PlayerController : MonoBehaviour {
         }
         //Debug.DrawLine(body.transform.position, body.transform.position + surfaceForwardVector * 2);
         //Debug.DrawLine(body.transform.position, body.transform.position + surfaceRightVector * 2);
-
+        Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward * powerRange);
 
         // Jump delay counter
         if (isJumping) {
@@ -114,6 +137,14 @@ public class PlayerController : MonoBehaviour {
             if (jumpCounter >= jumpDelay) {
                 isJumping = false;
                 jumpCounter = 0;
+            }
+        }
+        // Power delay counter
+        if (powersOnCooldown) {
+            powerCounter += Time.deltaTime;
+            if (powerCounter >= powerDelay) {
+                powersOnCooldown = false;
+                powerCounter = 0;
             }
         }
 
@@ -165,6 +196,31 @@ public class PlayerController : MonoBehaviour {
         return !onGround;
     }
 
+    private void UsePower(EPower power) {
+        if (powersOnCooldown) return;
+        // Target interactable to be found using a ray
+        InteractablePhasedObject target;
+        RaycastHit hit;
+        // Ray from the centre of the camera forward by powerRange
+        Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, powerRange);
+        // If the ray hit an InteractablePhasedObject and the object is enabled, powers can be used
+        if (hit.rigidbody == null) return;
+        target = hit.rigidbody.GetComponentInParent<InteractablePhasedObject>();
+        if (target == null || !target.isEnabled) return;
+
+        Vector3 force = Vector3.zero;
+        switch (power) {
+            case EPower.PUSH:
+                force = surfaceForwardVector * pushPower;
+                break;
+            case EPower.PULL:
+                force = -surfaceForwardVector * pullPower;
+                break;
+        }
+        target.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+        powersOnCooldown = true;
+    }
+
     /// <summary>
     /// Gets input and stores it in InputValues and handles non-physics input
     /// </summary>
@@ -176,9 +232,15 @@ public class PlayerController : MonoBehaviour {
         InputValues[InputMappings.EAction.PUSH] = InputMappings.GetInput(InputMappings.EAction.PUSH);
         InputValues[InputMappings.EAction.PULL] = InputMappings.GetInput(InputMappings.EAction.PULL);
 
-        Debug.Log(InputValues[InputMappings.EAction.MOVE_FORWARD]);
         if (InputValues[InputMappings.EAction.JUMP] == 1) {
             Jump();
+        }
+
+        // Powers
+        if (InputValues[InputMappings.EAction.PUSH] == 1) {
+            UsePower(EPower.PUSH);
+        } else if (InputValues[InputMappings.EAction.PULL] == 1) {
+            UsePower(EPower.PULL);
         }
     }
 }

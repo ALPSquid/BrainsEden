@@ -3,6 +3,12 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
+    public static class Tags {
+        public static string GAME_MANAGER = "GameManager";
+        public static string PLAYER = "Player";
+        public static string PLAYER_ARM = "PlayerArm";
+    }
+
 	public enum EWorldPhase {
 		COLOUR,
 		ALPHA
