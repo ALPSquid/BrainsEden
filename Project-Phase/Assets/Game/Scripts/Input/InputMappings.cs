@@ -41,6 +41,6 @@ public static class InputMappings {
             float input =  Input.GetAxis(InputNames[action]);
             return (Mathf.Abs(input) > AxisDeadzones[action]) ? input : 0;
         }
-        return Input.GetButton(InputNames[action])? 1 : 0;
+        return Input.GetButtonDown(InputNames[action])? 1 : 0;
     }	
 }

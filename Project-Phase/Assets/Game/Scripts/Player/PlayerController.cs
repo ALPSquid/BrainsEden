@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour {
     public float movementSpeed = 40f;
     public float maxSpeed = 6f;
     [Tooltip("Jump froce, ignoring mass")]
-    public float jumpForce = 1f;
+    public float jumpForce = 5f;
     [Tooltip("Delay between when the player can jump")]
     public float jumpDelay = 0.3f;
 
@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour {
     [Tooltip("Range of the player's power in units")]
     public float powerRange = 3.5f;
     [Tooltip("Delay between when the player can use their powers")]
-    public float powerDelay = 0.75f;
+    public float powerDelay = 0.5f;
     public float pushPower = 100f;
     public float pullPower = 120f;
 

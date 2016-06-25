@@ -6,6 +6,8 @@ public abstract class PuzzleVolume : MonoBehaviour {
 
     // List of puzzle elements inside this puzzle volume
     protected List<PuzzleElement> puzzleElements = new List<PuzzleElement>();
+    // List of doors in the puzzle
+    protected List<DoorComponent> doors = new List<DoorComponent>();
     // Whether all puzzle elements have been complete
     protected bool isComplete = false;
     private bool lastIsComplete = false;
@@ -34,6 +36,12 @@ public abstract class PuzzleVolume : MonoBehaviour {
 
     void OnTriggerExit(Collider other) {
         AddRemovePuzzleElement(other.gameObject);
+    }
+
+    public void ActivateDoors() {
+        foreach (DoorComponent door in doors) {
+            door.OnActivate();
+        }
     }
 
     /// <summary>
