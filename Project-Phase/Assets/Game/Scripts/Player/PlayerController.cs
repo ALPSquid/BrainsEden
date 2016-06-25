@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour {
     [Tooltip("Range of the player's power in units")]
     public float powerRange = 3.5f;
     [Tooltip("Delay between when the player can use their powers")]
-    public float powerDelay = 1f;
+    public float powerDelay = 0.75f;
     public float pushPower = 10f;
     public float pullPower = 10f;
 
@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour {
     private Vector3 surfaceForwardVector;
     private Vector3 surfaceRightVector;
 
-    private Animation animPlayerArm;
+    private Animator animPlayerArm;
     private GameManager gameManager;
 
     // Cache of input values
@@ -83,11 +83,11 @@ public class PlayerController : MonoBehaviour {
     void Start() {
         gameManager = GameObject.FindGameObjectWithTag(GameManager.Tags.GAME_MANAGER).GetComponent<GameManager>();
         if (gameManager == null) {
-            throw new UnityException("Scene needs a GameManager instance with tag 'GameManager'");
+            throw new UnityException("Scene needs a GameManager instance with tag: " + GameManager.Tags.GAME_MANAGER);
         }
         body = GetComponent<Rigidbody>();
         bodyCollider = GetComponent<CapsuleCollider>();
-        animPlayerArm = GameObject.FindGameObjectWithTag(GameManager.Tags.PLAYER_ARM).GetComponent<Animation>();
+        animPlayerArm = GameObject.FindGameObjectWithTag(GameManager.Tags.PLAYER_ARM).GetComponent<Animator>();
 
         // Defaults
         surfaceForwardVector = body.transform.forward;
@@ -212,9 +212,11 @@ public class PlayerController : MonoBehaviour {
         switch (power) {
             case EPower.PUSH:
                 force = surfaceForwardVector * pushPower;
+                if (animPlayerArm) animPlayerArm.SetTrigger("Push");
                 break;
             case EPower.PULL:
                 force = -surfaceForwardVector * pullPower;
+                if (animPlayerArm) animPlayerArm.SetTrigger("Pull");
                 break;
         }
         target.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
