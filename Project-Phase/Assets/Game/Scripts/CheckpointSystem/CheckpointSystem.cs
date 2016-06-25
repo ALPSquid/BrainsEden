@@ -3,6 +3,8 @@ using System.Collections;
 
 public class CheckpointSystem : MonoBehaviour {
 
+	public int currentCheckpoint = 0;
+
 	void OnEnable(){
 		Events.OnCheckpointActivatedEvent += CheckCheckpoint;
 	}
@@ -13,5 +15,11 @@ public class CheckpointSystem : MonoBehaviour {
 	
 	void CheckCheckpoint(Events.EventChecpointActivated eventChecpointActivated){
 		
+		GameObject checkpointObject = eventChecpointActivated.checkpointObject;
+		CheckpointComponent checkpointComponent = checkpointObject.GetComponent<CheckpointComponent>();
+		
+		if (){
+			
+		}
 	}
 }
