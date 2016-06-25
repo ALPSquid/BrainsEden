@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 52fb59e1bf24a2c48a1bcc333cbead2b
-timeCreated: 1466849127
+guid: a010494495e27e04f95ea7f0e48706c3
+timeCreated: 1466800183
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Bouldor_01
+    4300000: Tree_Fallen
   materials:
     importMaterials: 1
     materialName: 0
@@ -49,10 +49,10 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
-    normalSmoothAngle: 15
+    normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
     normalImportMode: 0
-    tangentImportMode: 0
+    tangentImportMode: 1
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
