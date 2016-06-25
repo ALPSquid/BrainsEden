@@ -38,9 +38,10 @@ public abstract class PuzzleVolume : MonoBehaviour {
         AddRemovePuzzleElement(other.gameObject);
     }
 
-    public void ActivateDoors() {
+    public void SetDoorsActive(bool active) {
         foreach (DoorComponent door in doors) {
-            door.OnActivate();
+            if (active) door.OnActivate();
+            else door.OnDeactivate();
         }
     }
 

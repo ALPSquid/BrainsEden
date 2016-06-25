@@ -3,15 +3,13 @@ using System.Collections;
 
 public abstract class DoorComponent : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    public bool isActive = false;
 
-    public abstract void OnActivate();
+    public virtual void OnActivate() {
+        isActive = true;
+    }
+
+    public virtual void OnDeactivate() {
+        isActive = false;
+    }
 }
