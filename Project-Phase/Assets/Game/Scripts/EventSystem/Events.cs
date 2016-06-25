@@ -30,4 +30,7 @@ public static class Events {
 
 	public delegate void OnCheckpointActivated(EventCheckpointActivated eventChecpointActivated);
 	public static OnCheckpointActivated onCheckpointActivatedEvent;
+
+	public delegate void OnTabletPickedUp();
+	public static OnTabletPickedUp onTabletPickedUpEvent;
 }

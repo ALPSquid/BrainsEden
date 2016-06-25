@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
         public static string GAME_MANAGER = "GameManager";
         public static string PLAYER = "Player";
         public static string PLAYER_ARM = "PlayerArm";
+		public static string CHECKPOINT = "Checkpoint";
     }
 
 	public enum EWorldPhase {

@@ -8,7 +8,7 @@ public class CheckpointSystem : MonoBehaviour {
 
 	void Start(){
 		currentCheckpoint = PlayerPrefs.GetInt("CURRENT_CHECKPOINT");
-		GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
+		GameObject[] checkpoints = GameObject.FindGameObjectsWithTag(GameManager.Tags.CHECKPOINT);
 
 		foreach(GameObject checkpoint in checkpoints){
 			int checkpointID = checkpoint.GetComponent<CheckpointComponent>().OrderID;

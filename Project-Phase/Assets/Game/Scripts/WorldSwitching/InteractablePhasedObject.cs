@@ -10,7 +10,7 @@ public class InteractablePhasedObject : PhasedObject {
     }
 
     void OnEnable() {
-        GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        GameManager gameManager = GameObject.FindGameObjectWithTag(GameManager.Tags.GAME_MANAGER).GetComponent<GameManager>();
         if (gameManager == null) return;
         _isEnabled = gameManager.currentPhase == enabledPhase;
     }
