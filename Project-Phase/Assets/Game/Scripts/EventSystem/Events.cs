@@ -27,6 +27,9 @@ public static class Events {
 	
 	public delegate void OnPlayerDeath();
 	public static OnPlayerDeath onPlayerDeathEvent;
+	
+	public delegate void OnGameEnd();
+	public static OnGameEnd OnGameEndEvent;
 
 	public delegate void OnCheckpointActivated(EventChecpointActivated eventChecpointActivated);
 	public static OnCheckpointActivated OnCheckpointActivatedEvent;

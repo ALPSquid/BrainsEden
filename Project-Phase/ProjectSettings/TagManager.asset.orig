@@ -3,8 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
+<<<<<<< HEAD
+  tags:
   - GameManager
   - Checkpoint
+=======
+  tags: []
+>>>>>>> 5a6a06ba59e7216dbfa781f730ca4b8a0bfe382f
   layers:
   - Default
   - TransparentFX
