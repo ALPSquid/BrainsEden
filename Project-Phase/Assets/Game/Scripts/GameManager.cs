@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameManager{
+public class GameManager : MonoBehaviour {
 	
 	public enum EWorldPhase {
 		COLOUR,

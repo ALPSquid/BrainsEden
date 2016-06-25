@@ -1,23 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class PlayerController : MonoBehaviour {
-	bool world;
 
-	void Awake (){
-		SwitchWorld();
-	}
+    public MouseLook mouseLook = new MouseLook();
+    private GameManager gameManager;
 
-	// Update is called once per frame
+
+    void Start() {
+        mouseLook.Init(transform, Camera.main.transform);
+    }
+
+    void OnEnable() {
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        if (gameManager == null) {
+            throw new UnityException("Scene needs a GameManager instance with tag 'GameManager'");
+        }
+    }
+
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.Q)) {
-			SwitchWorld();
+			
 		}
-	}
+        mouseLook.LookRotation(transform, Camera.main.transform);
 
-	void SwitchWorld(){
-		//Events.onPhaseSwitchedEvent();
-		world = !world;
-		//GameManager.world = world;
 	}
 }

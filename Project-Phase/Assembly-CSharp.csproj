@@ -49,6 +49,7 @@
      <Compile Include="Assets\Game\Scripts\CheckpointSystem\CheckpointSystem.cs" />
      <Compile Include="Assets\Game\Scripts\EventSystem\Events.cs" />
      <Compile Include="Assets\Game\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Game\Scripts\Player\MouseLook.cs" />
      <Compile Include="Assets\Game\Scripts\Player\PlayerController.cs" />
      <Compile Include="Assets\Game\Scripts\UserInterface\MainMenuUI.cs" />
      <Compile Include="Assets\Game\Scripts\UserInterface\UI.cs" />
