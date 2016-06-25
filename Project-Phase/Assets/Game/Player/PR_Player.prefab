@@ -1257,7 +1257,7 @@ Animator:
   m_GameObject: {fileID: 142810}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 204ed8e7042e7694a9e9e963d40e286b, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8e2348c71ff9a414e8fed2e7714e5a44, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1281,7 +1281,7 @@ MonoBehaviour:
   jumpForce: 1
   jumpDelay: .300000012
   powerRange: 3.5
-  powerDelay: 1
+  powerDelay: .75
   pushPower: 10
   pullPower: 10
   mouseLook:
