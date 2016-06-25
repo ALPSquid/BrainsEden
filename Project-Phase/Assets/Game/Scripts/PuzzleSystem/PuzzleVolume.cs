@@ -69,4 +69,19 @@ public abstract class PuzzleVolume : MonoBehaviour {
             puzzleElements.Add(puzzleElement);
         }
     }
+
+    /// <summary>
+    /// Checks if the provided game object has a DoorComponent, 
+    /// and if it does, adds it if it's not tracked, or removes it if it is
+    /// </summary>
+    /// <param name="other">GameObject to check DoorComponent for</param>
+    private void AddRemoveDoor(GameObject other) {
+        DoorComponent door = other.GetComponentInParent<DoorComponent>();
+        if (!door) return;
+        if (doors.Contains(door)) {
+            doors.Remove(door);
+        } else {
+            doors.Add(door);
+        }
+    }
 }
