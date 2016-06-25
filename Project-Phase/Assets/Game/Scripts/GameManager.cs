@@ -30,16 +30,16 @@ public class GameManager : MonoBehaviour {
 		Events.onPlayerDeathEvent -= PlayerDied;
     }
 	
-    void SwitchPhase() {
+    public void SwitchPhase() {
         currentPhase = (currentPhase == EWorldPhase.COLOUR) ? EWorldPhase.ALPHA : EWorldPhase.COLOUR;
-        Events.onPhaseSwitchedEvent(new Events.EventPhaseSwitched(currentPhase));
+        if (Events.onPhaseSwitchedEvent != null) Events.onPhaseSwitchedEvent(new Events.EventPhaseSwitched(currentPhase));
     }
 
-	void PlayerDied(){
+	private void PlayerDied(){
 		Events.onGameEndEvent();
 	}
 	
-	void ReloadLevel(){
+	private void ReloadLevel(){
 		Application.LoadLevel(level);
 	}
 

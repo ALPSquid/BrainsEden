@@ -26,8 +26,8 @@ public class PlayerController : MonoBehaviour {
     public float powerRange = 3.5f;
     [Tooltip("Delay between when the player can use their powers")]
     public float powerDelay = 0.75f;
-    public float pushPower = 20f;
-    public float pullPower = 25f;
+    public float pushPower = 100f;
+    public float pullPower = 120f;
 
     [Header("Controls")]
     public MouseLook mouseLook = new MouseLook();
@@ -199,14 +199,12 @@ public class PlayerController : MonoBehaviour {
     private void UsePower(EPower power) {
         if (powersOnCooldown) return;
         // Target interactable to be found using a ray
-        InteractablePhasedObject target;
+        InteractablePhasedObject target = null;
         RaycastHit hit;
         // Ray from the centre of the camera forward by powerRange
         Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, powerRange);
         // If the ray hit an InteractablePhasedObject and the object is enabled, powers can be used
-        if (hit.rigidbody == null) return;
-        target = hit.rigidbody.GetComponentInParent<InteractablePhasedObject>();
-        if (target == null || !target.isEnabled) return;
+        if (hit.rigidbody != null) target = hit.rigidbody.GetComponentInParent<InteractablePhasedObject>();
 
         Vector3 force = Vector3.zero;
         switch (power) {
@@ -219,7 +217,9 @@ public class PlayerController : MonoBehaviour {
                 if (animPlayerArm) animPlayerArm.SetTrigger("Pull");
                 break;
         }
-        target.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+        if (target != null && target.isEnabled) {
+            target.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+        }
         powersOnCooldown = true;
     }
 
@@ -236,6 +236,10 @@ public class PlayerController : MonoBehaviour {
 
         if (InputValues[InputMappings.EAction.JUMP] == 1) {
             Jump();
+        }
+
+        if (InputValues[InputMappings.EAction.SWITCH_PHASE] == 1) {
+            gameManager.SwitchPhase();
         }
 
         // Powers
