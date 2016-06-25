@@ -1,6 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public static class GameManager{
-	public static bool world;
+public class GameManager{
+	
+	public enum EWorldPhase {
+		COLOUR,
+		ALPHA
+	}
+	
+	public EWorldPhase world = EWorldPhase.COLOUR;
 }

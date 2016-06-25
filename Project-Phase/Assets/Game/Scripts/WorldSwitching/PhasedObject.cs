@@ -12,7 +12,15 @@ public class PhasedObject : WorldSwitchingComponent {
 		renderer = GetComponent<Renderer> ();
 	}
 
-	public override void WorldSwitch(){
-		renderer.material = (GameManager.world == true) ? colourMaterials : alphaMaterials;
+	public override void PhaseSwitched(Events.EventPhaseSwitched eventPhaseSwitched){
+		
+		switch (eventPhaseSwitched.currentPhase){
+			case GameManager.EWorldPhase.COLOUR;
+				renderer.material = colourMaterials;
+				break;
+			case GameManager.EWorldPhase.ALPHA;
+				renderer.material = alphaMaterials;
+				break;
+		}
 	}
 }
