@@ -17,9 +17,16 @@ public class PlayerController : MonoBehaviour {
 
     private GameManager gameManager;
     // Cache of input values
-    private Dictionary<InputMappings.EAction, bool> InputValues;
+    private Dictionary<InputMappings.EAction, float> InputValues = new Dictionary<InputMappings.EAction, float>() {
+        {InputMappings.EAction.MOVE_FORWARD, 0},
+        {InputMappings.EAction.MOVE_RIGHT, 0},
+        {InputMappings.EAction.JUMP, 0},
+        {InputMappings.EAction.PUSH, 0},
+        {InputMappings.EAction.PULL, 0},
+        {InputMappings.EAction.SWITCH_PHASE, 0}
+    };
     // Input Values last frame
-    private Dictionary<InputMappings.EAction, bool> LastInputValues;
+    private Dictionary<InputMappings.EAction, float> LastInputValues;
 
     private CapsuleCollider collider;
     private Rigidbody body;
@@ -34,6 +41,8 @@ public class PlayerController : MonoBehaviour {
         if (gameManager == null) {
             throw new UnityException("Scene needs a GameManager instance with tag 'GameManager'");
         }
+        body = GetComponent<Rigidbody>();
+        collider = GetComponent<CapsuleCollider>();
     }
 
 	void Update () {
@@ -44,7 +53,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
     void FixedUpdate() {
-        if (InputValues[InputMappings.EAction.MOVE_FORWARD]) {
+        if (InputValues[InputMappings.EAction.MOVE_FORWARD] > 0) {
             body.AddForce(body.transform.forward * movementSpeed, ForceMode.Acceleration);
         }
     }
