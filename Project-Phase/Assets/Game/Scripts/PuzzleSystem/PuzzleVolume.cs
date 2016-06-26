@@ -34,10 +34,12 @@ public abstract class PuzzleVolume : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
         AddRemovePuzzleElement(other.gameObject);
+        AddRemoveDoor(other.gameObject);
     }
 
     void OnTriggerExit(Collider other) {
         AddRemovePuzzleElement(other.gameObject);
+        AddRemoveDoor(other.gameObject);
     }
 
     /// <summary>
@@ -69,6 +71,7 @@ public abstract class PuzzleVolume : MonoBehaviour {
     private void AddRemovePuzzleElement(GameObject other) {
         PuzzleElement puzzleElement = other.GetComponentInParent<PuzzleElement>();
         if (!puzzleElement) return;
+        Debug.Log("Puzzle Element");
         if (puzzleElements.Contains(puzzleElement)) {
             puzzleElements.Remove(puzzleElement);
         } else {
@@ -84,6 +87,7 @@ public abstract class PuzzleVolume : MonoBehaviour {
     private void AddRemoveDoor(GameObject other) {
         DoorComponent door = other.GetComponentInParent<DoorComponent>();
         if (!door) return;
+        Debug.Log("Door Element");
         if (doors.Contains(door)) {
             doors.Remove(door);
         } else {

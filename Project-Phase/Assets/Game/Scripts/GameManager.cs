@@ -10,7 +10,8 @@ public class GameManager : MonoBehaviour {
 		public static string CHECKPOINT = "Checkpoint";
         public static string PLAYER_HUD = "PlayerHUD";
         public static string HUD_INFOTEXT = "HUDInfoText";
-		public static string BOULDER = "Boulder";
+        public static string BOULDER = "Boulder";
+        public static string MAZE_ORB = "MazeOrb";
     }
 
 	public enum EWorldPhase {
@@ -43,12 +44,12 @@ public class GameManager : MonoBehaviour {
         if (Events.onPhaseSwitchedEvent != null) Events.onPhaseSwitchedEvent(new Events.EventPhaseSwitched(currentPhase));
     }
 
+    public void ReloadLevel() {
+        Application.LoadLevel("Level01");
+    }
+
 	private void PlayerDied(){
 		Events.onGameEndEvent();
-	}
-	
-	private void ReloadLevel(){
-		Application.LoadLevel(level);
 	}
 
 	void Update(){

@@ -10,6 +10,7 @@ TagManager:
   - PlayerHUD
   - HUDInfoText
   - Boulder
+  - MazeOrb
   layers:
   - Default
   - TransparentFX

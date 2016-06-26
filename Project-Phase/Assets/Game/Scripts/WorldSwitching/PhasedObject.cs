@@ -9,7 +9,7 @@ public class PhasedObject : WorldSwitchingComponent {
 
 	[HideInInspector][SerializeField] new Renderer renderer;
 
-	void Awake() {
+	public void Awake() {
 		renderer = GetComponent<Renderer>();
 	}
 
