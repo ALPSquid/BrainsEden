@@ -79,7 +79,8 @@ public class PlayerController : MonoBehaviour {
         {InputMappings.EAction.PUSH, 0},
         {InputMappings.EAction.PULL, 0},
         {InputMappings.EAction.SWITCH_PHASE, 0},
-        {InputMappings.EAction.INTERACT, 0}
+        {InputMappings.EAction.INTERACT, 0},
+        {InputMappings.EAction.RESTART, 0}
     };
     // Input Values last frame
     private Dictionary<InputMappings.EAction, float> LastInputValues;
@@ -269,6 +270,10 @@ public class PlayerController : MonoBehaviour {
 
         if (InputValues[InputMappings.EAction.SWITCH_PHASE] == 1) {
             gameManager.SwitchPhase();
+        }
+
+        if (InputValues[InputMappings.EAction.RESTART] == 1) {
+            gameManager.ReloadLevel();
         }
 
         // Powers

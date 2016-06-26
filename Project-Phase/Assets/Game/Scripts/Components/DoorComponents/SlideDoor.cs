@@ -8,10 +8,10 @@ public class SlideDoor : DoorComponent {
 	public float duration = 1;
 
 	void Start(){
-		startLocation = transform.position;
+		startLocation = transform.localPosition;
 	}
 
 	void Update(){
-		transform.position = Vector3.MoveTowards(transform.position, (isActive) ? endLocation : startLocation, duration * Time.deltaTime);
+        transform.localPosition = Vector3.MoveTowards(transform.localPosition, (isActive) ? endLocation : startLocation, duration * Time.deltaTime);
 	}
 }

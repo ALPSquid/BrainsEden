@@ -10,9 +10,12 @@ public class InteractablePhasedObject : PhasedObject {
     }
 
     private Rigidbody body;
+    private Vector3 savedVelocity = Vector3.zero;
+    private Vector3 savedAngularVelocity = Vector3.zero;
 
 
     void Awake() {
+        base.Awake();
         body = GetComponent<Rigidbody>();
     }
 
@@ -23,7 +26,16 @@ public class InteractablePhasedObject : PhasedObject {
     }
 	
 	public override void PhaseSwitched(Events.EventPhaseSwitched eventPhaseSwitched){
+        base.PhaseSwitched(eventPhaseSwitched);
         _isEnabled = eventPhaseSwitched.currentPhase == enabledPhase;
-        body.constraints = (_isEnabled)? RigidbodyConstraints.None : RigidbodyConstraints.FreezeAll;
-	}
+        if (_isEnabled) {
+            body.constraints = RigidbodyConstraints.None;
+            body.velocity = savedVelocity;
+            body.angularVelocity = savedAngularVelocity;
+        } else {
+            savedVelocity = body.velocity;
+            savedAngularVelocity = body.angularVelocity;
+            body.constraints = RigidbodyConstraints.FreezeAll;
+        }	
+    }
 }
