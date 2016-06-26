@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour {
 		public static string CHECKPOINT = "Checkpoint";
         public static string PLAYER_HUD = "PlayerHUD";
         public static string HUD_INFOTEXT = "HUDInfoText";
+		public static string HUD_WHITE_OVERLAY = "HUDFadeOver";
         public static string BOULDER = "Boulder";
         public static string MAZE_ORB = "MazeOrb";
     }
@@ -32,11 +33,13 @@ public class GameManager : MonoBehaviour {
         Cursor.visible = false;
 		Events.onGameEndEvent += ReloadLevel;
 		Events.onPlayerDeathEvent += PlayerDied;
+		Events.onCreditsStartedEvent += EndLevel;
     }
 
 	void OnDisable() {
 		Events.onGameEndEvent -= ReloadLevel;
 		Events.onPlayerDeathEvent -= PlayerDied;
+		Events.onCreditsStartedEvent -= EndLevel;
     }
 	
     public void SwitchPhase() {
@@ -50,6 +53,10 @@ public class GameManager : MonoBehaviour {
 
 	private void PlayerDied(){
 		Events.onGameEndEvent();
+	}
+
+	private void EndLevel(){
+		Application.LoadLevel("MainMenu");
 	}
 
 	void Update(){
