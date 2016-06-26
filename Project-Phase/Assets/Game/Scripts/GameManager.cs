@@ -21,6 +21,11 @@ public class GameManager : MonoBehaviour {
 	public string level;
 	bool cursorVisible = false; // Temp bool to switch cursor visibility
 
+
+    void Start() {
+        if (Events.onPhaseSwitchedEvent != null) Events.onPhaseSwitchedEvent(new Events.EventPhaseSwitched(currentPhase));
+    }
+
     void OnEnable() {
         Cursor.visible = false;
 		Events.onGameEndEvent += ReloadLevel;

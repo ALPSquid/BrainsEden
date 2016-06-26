@@ -1278,7 +1278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 40
   maxSpeed: 6
-  jumpForce: 10
+  jumpForce: 2
   jumpDelay: .300000012
   powerRange: 3.5
   powerDelay: .5
