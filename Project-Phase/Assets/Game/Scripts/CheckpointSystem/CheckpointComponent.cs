@@ -13,8 +13,8 @@ public class CheckpointComponent : MonoBehaviour {
 		}
 	}
 	
-	void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.tag == GameManager.Tags.PLAYER){
+	void OnTriggerEnter(Collider collider) {
+		if (collider.gameObject.tag == GameManager.Tags.PLAYER){
 			Activated();
 		}
     }
