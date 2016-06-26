@@ -72,7 +72,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 105294}
   serializedVersion: 2
-  m_Mass: 300
+  m_Mass: 200
   m_Drag: .100000001
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -116,7 +116,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_Mass
-      value: 300
+      value: 200
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

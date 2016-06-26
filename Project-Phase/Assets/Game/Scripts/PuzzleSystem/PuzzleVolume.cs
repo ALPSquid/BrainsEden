@@ -15,6 +15,7 @@ public abstract class PuzzleVolume : MonoBehaviour {
 
     void Update() {
         // Puzzle has to have at least one element to consider being complete
+		Debug.Log (puzzleElements.Count);
         isComplete = puzzleElements.Count > 0;
         for (int i = 0; i < puzzleElements.Count; i++ ) {
             if (!puzzleElements[i].isComplete) {
@@ -46,6 +47,7 @@ public abstract class PuzzleVolume : MonoBehaviour {
     /// <param name="active">Whether the door should be activated</param>
     public void SetDoorsActive(bool active) {
         foreach (DoorComponent door in doors) {
+			Debug.Log ("DOOR FOUND");
             if (active) door.OnActivate();
             else door.OnDeactivate();
         }

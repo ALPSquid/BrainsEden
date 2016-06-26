@@ -5,14 +5,15 @@ public class BoulderPuzzleElement : PuzzleElement {
 
 	GameObject boulder;
 
-	void OnCollisionEnter(Collision collision) {
+	void OnTriggerEnter(Collider collision) {
 		if (collision.gameObject.tag.Equals(GameManager.Tags.BOULDER)) {
 			boulder = collision.gameObject;
 			isComplete = true;
+			Debug.Log("Puzzle Event Completed!");
 		}
 	}
 
-	void OnCollisionExit(Collision collision) {
+	void OnTriggerExit(Collider collision) {
 		if (collision.gameObject == boulder){
 			isComplete = false;
 			boulder = null;
