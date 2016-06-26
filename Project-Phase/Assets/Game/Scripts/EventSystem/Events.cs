@@ -33,4 +33,7 @@ public static class Events {
 
 	public delegate void OnTabletPickedUp();
 	public static OnTabletPickedUp onTabletPickedUpEvent;
+
+	public delegate void OnCreditsStarted();
+	public static OnCreditsStarted OnCreditsStartedEvent;
 }
