@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody body;
 
 
-    void OnEnable() {
+    void Awake() {
         gameManager = GameObject.FindGameObjectWithTag(GameManager.Tags.GAME_MANAGER).GetComponent<GameManager>();
         if (gameManager == null) {
             throw new UnityException("Scene needs a GameManager instance with tag: " + GameManager.Tags.GAME_MANAGER);

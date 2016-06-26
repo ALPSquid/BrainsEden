@@ -573,7 +573,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colourMaterials: []
   alphaMaterials:
-  - {fileID: 2100000, guid: cf3ebfed8fd94544cad939a09e6836df, type: 2}
+  - {fileID: 2100000, guid: bb48893330efd9149ae3f098ce285cfb, type: 2}
   renderer: {fileID: 0}
 --- !u!23 &120931405
 MeshRenderer:
@@ -2680,7 +2680,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colourMaterials: []
   alphaMaterials:
-  - {fileID: 2100000, guid: cf3ebfed8fd94544cad939a09e6836df, type: 2}
+  - {fileID: 2100000, guid: bb48893330efd9149ae3f098ce285cfb, type: 2}
   renderer: {fileID: 0}
 --- !u!23 &608064327
 MeshRenderer:

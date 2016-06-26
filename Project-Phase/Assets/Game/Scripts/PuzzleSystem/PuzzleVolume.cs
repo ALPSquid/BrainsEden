@@ -14,13 +14,15 @@ public abstract class PuzzleVolume : MonoBehaviour {
 
 
     void Update() {
-        isComplete = true;
+        // Puzzle has to have at least one element to consider being complete
+        isComplete = puzzleElements.Count > 0;
         for (int i = 0; i < puzzleElements.Count; i++ ) {
             if (!puzzleElements[i].isComplete) {
                 isComplete = false;
                 break;
             }
         }
+   
         // If the puzzle has just been completed, trigger callback
         if (isComplete && !lastIsComplete) {
             OnPuzzleComplete();
@@ -38,6 +40,10 @@ public abstract class PuzzleVolume : MonoBehaviour {
         AddRemovePuzzleElement(other.gameObject);
     }
 
+    /// <summary>
+    /// Sets active state on all doors in the puzzle
+    /// </summary>
+    /// <param name="active">Whether the door should be activated</param>
     public void SetDoorsActive(bool active) {
         foreach (DoorComponent door in doors) {
             if (active) door.OnActivate();

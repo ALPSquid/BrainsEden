@@ -3,11 +3,11 @@ using System.Collections;
 
 public abstract class WorldSwitchingComponent : MonoBehaviour {
 
-	void OnEnable(){
+	void OnEnable() {
 		Events.onPhaseSwitchedEvent += PhaseSwitched;
 	}
 
-	void OnDisable(){
+	void OnDisable() {
 		Events.onPhaseSwitchedEvent -= PhaseSwitched;
 	}
 

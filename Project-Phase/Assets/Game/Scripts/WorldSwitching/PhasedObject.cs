@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(Renderer))]
 public class PhasedObject : WorldSwitchingComponent {
 
 	public Material[] colourMaterials;
@@ -8,11 +9,11 @@ public class PhasedObject : WorldSwitchingComponent {
 
 	[HideInInspector][SerializeField] new Renderer renderer;
 
-	void Start(){
-		renderer = GetComponent<Renderer> ();
+	void Awake() {
+		renderer = GetComponent<Renderer>();
 	}
 
-	public override void PhaseSwitched(Events.EventPhaseSwitched eventPhaseSwitched){
+	public override void PhaseSwitched(Events.EventPhaseSwitched eventPhaseSwitched) {
 		
 		switch (eventPhaseSwitched.currentPhase){
 			case GameManager.EWorldPhase.COLOUR:
