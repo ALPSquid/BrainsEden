@@ -9,6 +9,7 @@ TagManager:
   - PlayerArm
   - PlayerHUD
   - HUDInfoText
+  - Boulder
   layers:
   - Default
   - TransparentFX
