@@ -9,6 +9,13 @@ public class InteractablePhasedObject : PhasedObject {
         get { return _isEnabled; }
     }
 
+    private Rigidbody body;
+
+
+    void Awake() {
+        body = GetComponent<Rigidbody>();
+    }
+
     void Start() {
         GameManager gameManager = GameObject.FindGameObjectWithTag(GameManager.Tags.GAME_MANAGER).GetComponent<GameManager>();
         if (gameManager == null) return;
@@ -17,5 +24,6 @@ public class InteractablePhasedObject : PhasedObject {
 	
 	public override void PhaseSwitched(Events.EventPhaseSwitched eventPhaseSwitched){
         _isEnabled = eventPhaseSwitched.currentPhase == enabledPhase;
+        body.constraints = (_isEnabled)? RigidbodyConstraints.None : RigidbodyConstraints.FreezeAll;
 	}
 }
