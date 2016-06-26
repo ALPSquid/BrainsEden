@@ -5,10 +5,10 @@ using System.Collections;
 public class SlidingPlatformComponent : MonoBehaviour {
 
     public GameObject targetObject;
-    public float maxSpeed = 0.25f;
+    public float maxSpeed = 2f;
     public float completeRange = 0.5f;
-    public float dragForce = 10f;
-    private Vector3 movementVector;
+    public float dragMultiplier = 0.8f;
+    private Vector3 directionToTarget;
     private bool isComplete = false;
     private Rigidbody body;
     private Vector3 startPosition;
@@ -19,8 +19,8 @@ public class SlidingPlatformComponent : MonoBehaviour {
     void Awake() {
         body = GetComponent<Rigidbody>();
         startPosition = transform.position;
-        movementVector = targetObject.transform.position - startPosition;
-        distanceToTarget = movementVector.sqrMagnitude;
+        directionToTarget = targetObject.transform.position - startPosition;
+        distanceToTarget = directionToTarget.sqrMagnitude;
         lastDistanceToTarget = distanceToTarget;
     }
 
@@ -29,7 +29,7 @@ public class SlidingPlatformComponent : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        Vector3 directionToTarget = targetObject.transform.position - transform.position;
+        directionToTarget = targetObject.transform.position - transform.position;
         distanceToTarget = directionToTarget.sqrMagnitude;
         if (!isComplete && distanceToTarget < completeRange * completeRange) {
             isComplete = true;
@@ -39,9 +39,13 @@ public class SlidingPlatformComponent : MonoBehaviour {
 
         if (isComplete || distanceToTarget > lastDistanceToTarget) {
             body.velocity = Vector3.zero;
-        } else {
-            float speed = Vector3.Dot(body.velocity, movementVector);       
-            body.velocity = movementVector * ((speed > maxSpeed)? maxSpeed : speed);
+        } else {            
+            //float speed = Vector3.Dot(body.velocity, movementVector);
+            //body.velocity = Quaternion.AngleAxis(Vector3.Angle(body.velocity.normalized, movementVector.normalized), Vector3.up)* body.velocity;
+            //if (speed > 1) body.velocity = movementVector.normalized * ((speed > maxSpeed) ? maxSpeed : speed);
+            //else body.velocity = Vector3.zero;
+
+            body.velocity = directionToTarget.normalized * body.velocity.magnitude;
         }
         lastDistanceToTarget = distanceToTarget;
     }
