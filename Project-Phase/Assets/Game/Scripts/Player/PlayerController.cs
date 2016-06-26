@@ -51,6 +51,14 @@ public class PlayerController : MonoBehaviour {
         get { return _speedLateral; }
     }
 
+    [Header("Arm Materials")]
+    public Material pushMat;
+    public Material pullMat;
+    public float emissionValue = 4.5f;
+    public Color pushMatEmissionColor;
+    public Color pullMatEmissionColor;
+    private Renderer armRenderer;
+
     // Whether a jump was just performed
     private bool isJumping = false;
     // Counter for jump delay
@@ -97,7 +105,11 @@ public class PlayerController : MonoBehaviour {
         body = GetComponent<Rigidbody>();
         bodyCollider = GetComponent<CapsuleCollider>();
         animPlayerArm = GameObject.FindGameObjectWithTag(GameManager.Tags.PLAYER_ARM).GetComponent<Animator>();
+        armRenderer = animPlayerArm.gameObject.GetComponentInChildren<Renderer>();
         playerHUD = GameObject.FindGameObjectWithTag(GameManager.Tags.PLAYER_HUD).GetComponent<HUD>();
+
+        pushMat.EnableKeyword("_EMISSION");
+        pullMat.EnableKeyword("_EMISSION");
 
         // Defaults
         surfaceForwardVector = body.transform.forward;
@@ -112,22 +124,32 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
         mouseLook.LookRotation(transform, Camera.main.transform);
         HandleInput();
+
+        pushMat.SetColor("_EmissionColor", pushMatEmissionColor * 0);
+        pullMat.SetColor("_EmissionColor", pullMatEmissionColor * 0);
         
         // Interactable object polling
         playerHUD.displayText("");
         RaycastHit cameraHit;
-        Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out cameraHit, interactRange);
+        Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out cameraHit, powerRange);
         if (cameraHit.distance != 0) {
-            LookAtComponent lookAtTarget = cameraHit.collider.GetComponentInParent<LookAtComponent>();
-            if (lookAtTarget) {
-                // If target is an instance of LookAtComponent, display info on the HUD
-                playerHUD.displayText(lookAtTarget.infoText);
-                // If Interact is pressed and the target is an InteractableLookAtComponent, interact with it
-                if (InputValues[InputMappings.EAction.INTERACT] == 1) {
-                    try {
-                        InteractableLookAtComponent interactable = (InteractableLookAtComponent)lookAtTarget;
-                        interactable.OnInteract();    
-                    } catch (InvalidCastException) { /* Not an interactable */ }                    
+            if (cameraHit.collider.GetComponentInParent<InteractablePhasedObject>() != null) {
+                pushMat.SetColor("_EmissionColor", pushMatEmissionColor * emissionValue);
+                pullMat.SetColor("_EmissionColor", pullMatEmissionColor * emissionValue);
+            }
+            // Interactable objects
+            if (cameraHit.distance <= interactRange) {
+                LookAtComponent lookAtTarget = cameraHit.collider.GetComponentInParent<LookAtComponent>();
+                if (lookAtTarget) {
+                    // If target is an instance of LookAtComponent, display info on the HUD
+                    playerHUD.displayText(lookAtTarget.infoText);
+                    // If Interact is pressed and the target is an InteractableLookAtComponent, interact with it
+                    if (InputValues[InputMappings.EAction.INTERACT] == 1) {
+                        try {
+                            InteractableLookAtComponent interactable = (InteractableLookAtComponent)lookAtTarget;
+                            interactable.OnInteract();
+                        } catch (InvalidCastException) { /* Not an interactable */ }
+                    }
                 }
             }
         }
@@ -239,11 +261,17 @@ public class PlayerController : MonoBehaviour {
         switch (power) {
             case EPower.PUSH:
                 force = surfaceForwardVector * pushPower;
-                if (animPlayerArm) animPlayerArm.SetTrigger("Push");
+                if (animPlayerArm) {
+                    animPlayerArm.SetTrigger("Push");
+                    armRenderer.material = pushMat;
+                }
                 break;
             case EPower.PULL:
                 force = -surfaceForwardVector * pullPower;
-                if (animPlayerArm) animPlayerArm.SetTrigger("Pull");
+                if (animPlayerArm) {
+                    animPlayerArm.SetTrigger("Pull");
+                    armRenderer.material = pullMat;
+                }
                 break;
         }
         if (target != null && target.isEnabled) {
