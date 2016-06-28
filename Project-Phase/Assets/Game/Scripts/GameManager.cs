@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -24,9 +25,13 @@ public class GameManager : MonoBehaviour {
 	public string level;
 	bool cursorVisible = false; // Temp bool to switch cursor visibility
 
-
     void Start() {
         if (Events.onPhaseSwitchedEvent != null) Events.onPhaseSwitchedEvent(new Events.EventPhaseSwitched(currentPhase));
+    }
+
+    void OnApplicationQuit() {
+        // DEBUG
+        PlayerPrefs.DeleteAll();
     }
 
     void OnEnable() {
@@ -48,7 +53,9 @@ public class GameManager : MonoBehaviour {
     }
 
     public void ReloadLevel() {
-        Application.LoadLevel("Level01");
+        //Application.LoadLevel("Level01");
+        if (Events.onLevelReloadedEvent != null) Events.onLevelReloadedEvent();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 	private void PlayerDied(){
@@ -56,7 +63,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void EndLevel(){
-		Application.LoadLevel("MainMenu");
+        //Application.LoadLevel("MainMenu");
+        SceneManager.LoadScene("MainMenu");
 	}
 
 	void Update(){

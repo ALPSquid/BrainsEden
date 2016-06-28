@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BoulderPuzzle : PuzzleVolume {
+public class GenericDoorPuzzle : PuzzleVolume {
 	
 	protected override void OnPuzzleComplete() {
-		Debug.Log("Puzzle Completed!");
 		SetDoorsActive(true);
 	}
 	

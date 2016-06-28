@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour {
     [Tooltip("How fast the player accelerates")]
     public float movementSpeed = 40f;
     public float maxSpeed = 6f;
-    [Tooltip("Jump froce, ignoring mass")]
+    [Tooltip("Jump force, ignoring mass")]
     public float jumpForce = 2f;
     [Tooltip("Delay between when the player can jump")]
     public float jumpDelay = 0.3f;
@@ -133,7 +133,8 @@ public class PlayerController : MonoBehaviour {
         RaycastHit cameraHit;
         Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out cameraHit, powerRange);
         if (cameraHit.distance != 0) {
-            if (cameraHit.collider.GetComponentInParent<InteractablePhasedObject>() != null) {
+            InteractablePhasedObject phasedObjectTarget = cameraHit.collider.GetComponentInParent<InteractablePhasedObject>();
+            if (phasedObjectTarget != null && phasedObjectTarget.isEnabled) {
                 pushMat.SetColor("_EmissionColor", pushMatEmissionColor * emissionValue);
                 pullMat.SetColor("_EmissionColor", pullMatEmissionColor * emissionValue);
             }
@@ -291,6 +292,7 @@ public class PlayerController : MonoBehaviour {
         InputValues[InputMappings.EAction.PUSH] = InputMappings.GetInput(InputMappings.EAction.PUSH);
         InputValues[InputMappings.EAction.PULL] = InputMappings.GetInput(InputMappings.EAction.PULL);
         InputValues[InputMappings.EAction.INTERACT] = InputMappings.GetInput(InputMappings.EAction.INTERACT);
+        InputValues[InputMappings.EAction.RESTART] = InputMappings.GetInput(InputMappings.EAction.RESTART);
 
         if (InputValues[InputMappings.EAction.JUMP] == 1) {
             Jump();

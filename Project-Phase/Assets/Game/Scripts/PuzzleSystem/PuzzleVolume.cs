@@ -69,7 +69,7 @@ public abstract class PuzzleVolume : MonoBehaviour {
     /// </summary>
     /// <param name="other">GameObject to check PuzzleElement for</param>
     private void AddRemovePuzzleElement(GameObject other) {
-        PuzzleElement puzzleElement = other.GetComponentInParent<PuzzleElement>();
+        PuzzleElement puzzleElement = other.GetComponent<PuzzleElement>();
         if (!puzzleElement) return;
         if (puzzleElements.Contains(puzzleElement)) {
             puzzleElements.Remove(puzzleElement);
@@ -84,7 +84,7 @@ public abstract class PuzzleVolume : MonoBehaviour {
     /// </summary>
     /// <param name="other">GameObject to check DoorComponent for</param>
     private void AddRemoveDoor(GameObject other) {
-        DoorComponent door = other.GetComponentInParent<DoorComponent>();
+        DoorComponent door = other.GetComponent<DoorComponent>();
         if (!door) return;
         if (doors.Contains(door)) {
             doors.Remove(door);

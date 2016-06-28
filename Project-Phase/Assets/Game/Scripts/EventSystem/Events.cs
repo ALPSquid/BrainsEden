@@ -19,6 +19,9 @@ public static class Events {
         }
 	}
 
+    public delegate void OnLevelReload();
+    public static OnLevelReload onLevelReloadedEvent;
+
 	public delegate void OnPhaseSwitched(EventPhaseSwitched eventPhaseSwitched);
 	public static OnPhaseSwitched onPhaseSwitchedEvent;
 	
