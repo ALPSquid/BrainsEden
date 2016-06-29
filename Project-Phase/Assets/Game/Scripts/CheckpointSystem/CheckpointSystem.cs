@@ -4,7 +4,7 @@ using System.Collections;
 public class CheckpointSystem : MonoBehaviour {
 
 	public int currentCheckpoint = 0;
-	Vector3 spawnPosition;
+	Vector3 spawnPosition = Vector3.zero;
 
 	void Start(){
         currentCheckpoint = PlayerPrefs.GetInt("CURRENT_CHECKPOINT");

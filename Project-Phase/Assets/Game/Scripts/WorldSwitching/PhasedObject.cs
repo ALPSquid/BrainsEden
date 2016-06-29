@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
 [RequireComponent(typeof(Renderer))]
@@ -8,10 +9,12 @@ public class PhasedObject : WorldSwitchingComponent {
 	public Material[] alphaMaterials;
 
     public GameManager.EWorldPhase enabledPhase;
+    [SyncVar]
     private bool _isEnabled;
     public bool isEnabled {
         get { return _isEnabled; }
     }
+    [SyncVar]
     public bool disableCollider = false;
     private Collider collider;
 
@@ -23,7 +26,13 @@ public class PhasedObject : WorldSwitchingComponent {
         collider = GetComponent<Collider>();
 	}
 
-    void Start() {
+    /*void Start() {
+        GameManager gameManager = GameObject.FindGameObjectWithTag(GameManager.Tags.GAME_MANAGER).GetComponent<GameManager>();
+        if (gameManager == null) return;
+        _isEnabled = gameManager.currentPhase == enabledPhase;
+    }*/
+
+    public override void OnStartServer() {
         GameManager gameManager = GameObject.FindGameObjectWithTag(GameManager.Tags.GAME_MANAGER).GetComponent<GameManager>();
         if (gameManager == null) return;
         _isEnabled = gameManager.currentPhase == enabledPhase;

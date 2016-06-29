@@ -1,15 +1,18 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class PuzzleVolume : MonoBehaviour {
+public abstract class PuzzleVolume : NetworkBehaviour {
 
     // List of puzzle elements inside this puzzle volume
     protected List<PuzzleElement> puzzleElements = new List<PuzzleElement>();
     // List of doors in the puzzle
     protected List<DoorComponent> doors = new List<DoorComponent>();
     // Whether all puzzle elements have been complete
+    [SyncVar]
     protected bool isComplete = false;
+    [SyncVar]
     private bool lastIsComplete = false;
 
 

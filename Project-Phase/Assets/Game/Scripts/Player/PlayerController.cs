@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
-public class PlayerController : MonoBehaviour {
+public class PlayerController : NetworkBehaviour {
 
     /// <summary>Player powers, used by UsePower()</summary>
     public enum EPower {
@@ -75,9 +76,14 @@ public class PlayerController : MonoBehaviour {
     private Vector3 surfaceForwardVector;
     private Vector3 surfaceRightVector;
 
+    private Camera playerCamera;
     private Animator animPlayerArm;
+    public GameObject HUDPrefab;
     private HUD playerHUD;
     private GameManager gameManager;
+
+    // Whether init has happened when not a local player
+    private bool notLocalPlayerInit = false;
 
     // Cache of input values
     private Dictionary<InputMappings.EAction, float> InputValues = new Dictionary<InputMappings.EAction, float>() {
@@ -97,7 +103,8 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody body;
 
 
-    void Awake() {
+    /*void Awake() {
+        if (!isLocalPlayer) return;
         gameManager = GameObject.FindGameObjectWithTag(GameManager.Tags.GAME_MANAGER).GetComponent<GameManager>();
         if (gameManager == null) {
             throw new UnityException("Scene needs a GameManager instance with tag: " + GameManager.Tags.GAME_MANAGER);
@@ -106,7 +113,41 @@ public class PlayerController : MonoBehaviour {
         bodyCollider = GetComponent<CapsuleCollider>();
         animPlayerArm = GameObject.FindGameObjectWithTag(GameManager.Tags.PLAYER_ARM).GetComponent<Animator>();
         armRenderer = animPlayerArm.gameObject.GetComponentInChildren<Renderer>();
-        playerHUD = GameObject.FindGameObjectWithTag(GameManager.Tags.PLAYER_HUD).GetComponent<HUD>();
+        //playerHUD = GameObject.FindGameObjectWithTag(GameManager.Tags.PLAYER_HUD).GetComponent<HUD>();
+        playerHUD = Instantiate(HUDPrefab).GetComponent<HUD>();
+
+        pushMat.EnableKeyword("_EMISSION");
+        pullMat.EnableKeyword("_EMISSION");
+
+        // Defaults
+        surfaceForwardVector = body.transform.forward;
+        surfaceRightVector = body.transform.right;
+        LastInputValues = InputValues;
+    }*/
+
+    /*void Start() {
+        //mouseLook.Init(transform, Camera.main.transform);
+    }*/
+
+    void Start() {
+        gameManager = GameObject.FindGameObjectWithTag(GameManager.Tags.GAME_MANAGER).GetComponent<GameManager>();
+    }
+
+    public override void OnStartLocalPlayer() {
+        playerCamera = GetComponentInChildren<Camera>();
+        mouseLook.Init(transform, playerCamera.transform);
+
+        /*gameManager = GameObject.FindGameObjectWithTag(GameManager.Tags.GAME_MANAGER).GetComponent<GameManager>();
+        if (gameManager == null) {
+            throw new UnityException("Scene needs a GameManager instance with tag: " + GameManager.Tags.GAME_MANAGER);
+        }*/
+        body = GetComponent<Rigidbody>();
+        bodyCollider = GetComponent<CapsuleCollider>();
+        animPlayerArm = GameObject.FindGameObjectWithTag(GameManager.Tags.PLAYER_ARM).GetComponent<Animator>();
+        armRenderer = animPlayerArm.gameObject.GetComponentInChildren<Renderer>();
+        //playerHUD = GameObject.FindGameObjectWithTag(GameManager.Tags.PLAYER_HUD).GetComponent<HUD>();
+        playerHUD = GetComponentInChildren<HUD>();
+        playerHUD.gameObject.GetComponent<Canvas>().worldCamera = playerCamera;
 
         pushMat.EnableKeyword("_EMISSION");
         pullMat.EnableKeyword("_EMISSION");
@@ -117,21 +158,26 @@ public class PlayerController : MonoBehaviour {
         LastInputValues = InputValues;
     }
 
-    void Start() {
-        mouseLook.Init(transform, Camera.main.transform);
-    }
-
-	void Update () {
-        mouseLook.LookRotation(transform, Camera.main.transform);
+    void Update () {        
+        if (!isLocalPlayer) {
+            if (!notLocalPlayerInit) {
+                GetComponentInChildren<Camera>().enabled = false;
+                GetComponentInChildren<AudioListener>().enabled = false;
+                GetComponentInChildren<HUD>().gameObject.SetActive(false);
+                notLocalPlayerInit = true;
+            }
+            return;
+        }
+        mouseLook.LookRotation(transform, playerCamera.transform);
         HandleInput();
 
         pushMat.SetColor("_EmissionColor", pushMatEmissionColor * 0);
         pullMat.SetColor("_EmissionColor", pullMatEmissionColor * 0);
         
         // Interactable object polling
-        playerHUD.displayText("");
+        if (playerHUD != null) playerHUD.displayText("");
         RaycastHit cameraHit;
-        Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out cameraHit, powerRange);
+        Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out cameraHit, powerRange);
         if (cameraHit.distance != 0) {
             InteractablePhasedObject phasedObjectTarget = cameraHit.collider.GetComponentInParent<InteractablePhasedObject>();
             if (phasedObjectTarget != null && phasedObjectTarget.isEnabled) {
@@ -204,6 +250,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
     void FixedUpdate() {
+        if (!isLocalPlayer) return;
         // Move forward/backward
         if (InputValues[InputMappings.EAction.MOVE_FORWARD] != 0 && Mathf.Abs(speed) < maxSpeed) {
             body.AddForce(
@@ -254,7 +301,7 @@ public class PlayerController : MonoBehaviour {
         InteractablePhasedObject target = null;
         RaycastHit hit;
         // Ray from the centre of the camera forward by powerRange
-        Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, powerRange);
+        Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, powerRange);
         // If the ray hit an InteractablePhasedObject and the object is enabled, powers can be used
         if (hit.rigidbody != null) target = hit.rigidbody.GetComponentInParent<InteractablePhasedObject>();
 
@@ -276,9 +323,14 @@ public class PlayerController : MonoBehaviour {
                 break;
         }
         if (target != null && target.isEnabled) {
-            target.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+            CmdUsePowerForce(target.gameObject, force);
         }
+
         powersOnCooldown = true;
+    }
+    [Command]
+    private void CmdUsePowerForce(GameObject target, Vector3 force) {
+        target.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
     }
 
     /// <summary>
@@ -299,7 +351,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         if (InputValues[InputMappings.EAction.SWITCH_PHASE] == 1) {
-            gameManager.SwitchPhase();
+            CmdSwitchPhase();
         }
 
         if (InputValues[InputMappings.EAction.RESTART] == 1) {
@@ -312,5 +364,14 @@ public class PlayerController : MonoBehaviour {
         } else if (InputValues[InputMappings.EAction.PULL] == 1) {
             UsePower(EPower.PULL);
         }
+
+        if (Input.GetKeyDown(KeyCode.LeftControl)) {
+            Cursor.visible = !Cursor.visible;
+        }
+    }
+
+    [Command]
+    private void CmdSwitchPhase() {
+        gameManager.SwitchPhase();
     }
 }
